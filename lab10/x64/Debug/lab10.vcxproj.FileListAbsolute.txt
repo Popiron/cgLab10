@@ -1,1 +1,2 @@
 C:\Users\Галушко Дмитрий\source\repos\lab10\x64\Debug\lab10.exe
+C:\Users\Галушко Дмитрий\Documents\GitHub\cgLab10\lab10\x64\Debug\lab10.exe
