@@ -1,4 +1,4 @@
-// Вращающийся треугольник с текстурой (можно вращать стрелочками)
+п»ї// Р’СЂР°С‰Р°СЋС‰РёР№СЃСЏ С‚СЂРµСѓРіРѕР»СЊРЅРёРє СЃ С‚РµРєСЃС‚СѓСЂРѕР№ (РјРѕР¶РЅРѕ РІСЂР°С‰Р°С‚СЊ СЃС‚СЂРµР»РѕС‡РєР°РјРё)
 
 #include <gl/glew.h>
 #include <SFML/OpenGL.hpp>
@@ -8,37 +8,36 @@
 #include <iostream>
 
 
-// В C и C++ есть оператор #, который позволяет превращать параметры макроса в строку
+// Р’ C Рё C++ РµСЃС‚СЊ РѕРїРµСЂР°С‚РѕСЂ #, РєРѕС‚РѕСЂС‹Р№ РїРѕР·РІРѕР»СЏРµС‚ РїСЂРµРІСЂР°С‰Р°С‚СЊ РїР°СЂР°РјРµС‚СЂС‹ РјР°РєСЂРѕСЃР° РІ СЃС‚СЂРѕРєСѓ
 #define TO_STRING(x) #x
 
 
-// Переменные с индентификаторами ID
-// ID шейдерной программы
+// РџРµСЂРµРјРµРЅРЅС‹Рµ СЃ РёРЅРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР°РјРё ID
+// ID С€РµР№РґРµСЂРЅРѕР№ РїСЂРѕРіСЂР°РјРјС‹
 GLuint shaderProgram;
-// ID атрибута вершин
+// ID Р°С‚СЂРёР±СѓС‚Р° РІРµСЂС€РёРЅ
 GLint attribVertex;
-// ID атрибута текстурных координат
+// ID Р°С‚СЂРёР±СѓС‚Р° С‚РµРєСЃС‚СѓСЂРЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚
 GLint attribTexture;
 GLint attribColor;
-// ID юниформа текстуры
+// ID СЋРЅРёС„РѕСЂРјР° С‚РµРєСЃС‚СѓСЂС‹
 GLint unifTexture;
-// ID юниформа угла поворота
-GLint unifAngle;
-// ID буфера ыершин
+GLint unifTexture2;
+GLint modId;
+// ID Р±СѓС„РµСЂР° С‹РµСЂС€РёРЅ
 GLuint vertexVBO;
-// ID буфера текстурных координат
+// ID Р±СѓС„РµСЂР° С‚РµРєСЃС‚СѓСЂРЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚
 GLuint textureVBO;
 
 GLuint colorsVBO;
-// ID текстуры
+// ID С‚РµРєСЃС‚СѓСЂС‹
 GLint textureHandle;
-// SFML текстура
+GLint textureHandle2;
+// SFML С‚РµРєСЃС‚СѓСЂР°
 sf::Texture textureData;
+sf::Texture textureData2;
 
-float objectRotation = 0;
-
-
-// Вершина
+// Р’РµСЂС€РёРЅР°
 struct Vertex
 {
     GLfloat x;
@@ -46,14 +45,30 @@ struct Vertex
     GLfloat z;
 };
 
+float mod = 5.0;
+
+void DecMod()
+{
+    mod -= 1;
+    if (mod < 0)
+        mod = 0;
+}
+
+void IncMod()
+{
+    mod += 1;
+    if (mod > 10)
+        mod = 10;
+}
 
 
-// Шейдер это просто строка, и не кажно, каким образом она получена -
-// можно загружать шейдеры из файла, можно объявлять прямо в программе,
-// в том числе таким образом, при помощи специального макроса
 
-// К сожалению, этот макрос не учитывает переводы строк, так что если они нужны,
-// например, после дирректив препроцессора, нужно явно ставить символ '\n'
+// РЁРµР№РґРµСЂ СЌС‚Рѕ РїСЂРѕСЃС‚Рѕ СЃС‚СЂРѕРєР°, Рё РЅРµ РєР°Р¶РЅРѕ, РєР°РєРёРј РѕР±СЂР°Р·РѕРј РѕРЅР° РїРѕР»СѓС‡РµРЅР° -
+// РјРѕР¶РЅРѕ Р·Р°РіСЂСѓР¶Р°С‚СЊ С€РµР№РґРµСЂС‹ РёР· С„Р°Р№Р»Р°, РјРѕР¶РЅРѕ РѕР±СЉСЏРІР»СЏС‚СЊ РїСЂСЏРјРѕ РІ РїСЂРѕРіСЂР°РјРјРµ,
+// РІ С‚РѕРј С‡РёСЃР»Рµ С‚Р°РєРёРј РѕР±СЂР°Р·РѕРј, РїСЂРё РїРѕРјРѕС‰Рё СЃРїРµС†РёР°Р»СЊРЅРѕРіРѕ РјР°РєСЂРѕСЃР°
+
+// Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ, СЌС‚РѕС‚ РјР°РєСЂРѕСЃ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚ РїРµСЂРµРІРѕРґС‹ СЃС‚СЂРѕРє, С‚Р°Рє С‡С‚Рѕ РµСЃР»Рё РѕРЅРё РЅСѓР¶РЅС‹,
+// РЅР°РїСЂРёРјРµСЂ, РїРѕСЃР»Рµ РґРёСЂСЂРµРєС‚РёРІ РїСЂРµРїСЂРѕС†РµСЃСЃРѕСЂР°, РЅСѓР¶РЅРѕ СЏРІРЅРѕ СЃС‚Р°РІРёС‚СЊ СЃРёРјРІРѕР» '\n'
 
 const char* VertexShaderSource = TO_STRING(
     #version 330 core\n
@@ -88,13 +103,16 @@ const char* FragShaderSource = TO_STRING(
     #version 330 core\n
 
     uniform sampler2D textureData;
+    uniform sampler2D textureDataToo;
+    uniform float mod;
 in vec4 vert_color;
 in vec3 tCoord;
 out vec4 color;
 void main()
 {
-    vec4 tex = texture(textureData, tCoord.xy);
-    color = vec4(vert_color.r * tex.r, vert_color.g * tex.g, vert_color.b * tex.b, vert_color.a * tex.a);
+    vec4 tex = texture(textureData, tCoord.xy) * (mod / 10);
+    vec4 tex2 = texture(textureDataToo, tCoord.xy) * ((10 - mod) / 10);
+    color = vec4(tex2.r + tex.r, tex2.g + tex.g, tex2.b + tex.b, tex2.a + tex.a);
 }
 );
 
@@ -123,6 +141,14 @@ int main() {
             else if (event.type == sf::Event::Resized) {
                 glViewport(0, 0, event.size.width, event.size.height);
             }
+            else if (event.type == sf::Event::KeyPressed)
+            {
+                switch (event.key.code) {
+                case (sf::Keyboard::Left): DecMod(); break;
+                case (sf::Keyboard::Right): IncMod(); break;
+                default: break;
+                }
+            }
         }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -137,16 +163,16 @@ int main() {
 }
 
 
-// Проверка ошибок OpenGL, если есть то вывод в консоль тип ошибки
+// РџСЂРѕРІРµСЂРєР° РѕС€РёР±РѕРє OpenGL, РµСЃР»Рё РµСЃС‚СЊ С‚Рѕ РІС‹РІРѕРґ РІ РєРѕРЅСЃРѕР»СЊ С‚РёРї РѕС€РёР±РєРё
 void checkOpenGLerror() {
     GLenum errCode;
-    // Коды ошибок можно смотреть тут
+    // РљРѕРґС‹ РѕС€РёР±РѕРє РјРѕР¶РЅРѕ СЃРјРѕС‚СЂРµС‚СЊ С‚СѓС‚
     // https://www.khronos.org/opengl/wiki/OpenGL_Error
     if ((errCode = glGetError()) != GL_NO_ERROR)
         std::cout << "OpenGl error!: " << errCode << std::endl;
 }
 
-// Функция печати лога шейдера
+// Р¤СѓРЅРєС†РёСЏ РїРµС‡Р°С‚Рё Р»РѕРіР° С€РµР№РґРµСЂР°
 void ShaderLog(unsigned int shader)
 {
     int infologLen = 0;
@@ -175,7 +201,7 @@ void InitVBO()
     glGenBuffers(1, &vertexVBO);
     
 
-    // Объявляем вершины треугольника
+    // РћР±СЉСЏРІР»СЏРµРј РІРµСЂС€РёРЅС‹ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°
     Vertex triangle[] = {
             {-0.5,-0.5,0.5},{-0.5,0.5,0.5},{0.5,0.5,0.5},{0.5,-0.5,0.5},
             {-0.5,-0.5,0.5},{-0.5,0.5,0.5},{-0.5,0.5,-0.5},{-0.5,-0.5,-0.5},
@@ -185,7 +211,7 @@ void InitVBO()
             {-0.5,-0.5,0.5},{0.5,-0.5,0.5},{0.5,-0.5,-0.5},{-0.5,-0.5,-0.5}
     };
 
-    // Объявляем текстурные координаты
+    // РћР±СЉСЏРІР»СЏРµРј С‚РµРєСЃС‚СѓСЂРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
     Vertex texture[] = {
             {0,0,0},{0,1,0},{1,1,0},{1,0,0},
             {0,0,0},{0,1,0},{1,1,0},{1,0,0},
@@ -255,19 +281,28 @@ void InitShader() {
         return;
     }
 
-    attribColor = glGetAttribLocation(shaderProgram, "color");
-    if (attribColor == -1)
-    {
-        std::cout << "could not bind attrib color" << std::endl;
-        return;
-    }
-
     unifTexture = glGetUniformLocation(shaderProgram, "textureData");
     if (unifTexture == -1)
     {
         std::cout << "could not bind uniform textureData" << std::endl;
         return;
     }
+
+    unifTexture2 = glGetUniformLocation(shaderProgram, "textureDataToo");
+    if (unifTexture2 == -1)
+    {
+        std::cout << "could not bind uniform textureDataToo" << std::endl;
+        return;
+    }
+
+
+    modId = glGetUniformLocation(shaderProgram, "mod");
+    if (modId == -1)
+    {
+        std::cout << "could not bind uniform mod" << std::endl;
+        return;
+    }
+
 
     /*
     * unifAngle = glGetUniformLocation(shaderProgram, "angle");
@@ -285,14 +320,18 @@ void InitShader() {
 void InitTexture()
 {
     const char* filename = "image.jpg";
-    // Загружаем текстуру из файла
+
+    const char* filename2 = "image2.jpg";
     if (!textureData.loadFromFile(filename))
     {
-        // Не вышло загрузить картинку
         return;
     }
-    // Теперь получаем openGL дескриптор текстуры
+    if (!textureData2.loadFromFile(filename2))
+    {
+        return;
+    }
     textureHandle = textureData.getNativeHandle();
+    textureHandle2 = textureData2.getNativeHandle();
 }
 
 void Init() {
@@ -304,18 +343,28 @@ void Init() {
 
 
 void Draw() {
-    // Устанавливаем шейдерную программу текущей
+    // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С€РµР№РґРµСЂРЅСѓСЋ РїСЂРѕРіСЂР°РјРјСѓ С‚РµРєСѓС‰РµР№
     glUseProgram(shaderProgram);
 
-    // Активируем текстурный блок 0, делать этого не обязательно, по умолчанию
-    // и так активирован GL_TEXTURE0, это нужно для использования нескольких текстур
+    // РђРєС‚РёРІРёСЂСѓРµРј С‚РµРєСЃС‚СѓСЂРЅС‹Р№ Р±Р»РѕРє 0, РґРµР»Р°С‚СЊ СЌС‚РѕРіРѕ РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ, РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+    // Рё С‚Р°Рє Р°РєС‚РёРІРёСЂРѕРІР°РЅ GL_TEXTURE0, СЌС‚Рѕ РЅСѓР¶РЅРѕ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РЅРµСЃРєРѕР»СЊРєРёС… С‚РµРєСЃС‚СѓСЂ
     glActiveTexture(GL_TEXTURE0);
-    // Обёртка SFML на opengl функцией glBindTexture
+    // РћР±С‘СЂС‚РєР° SFML РЅР° opengl С„СѓРЅРєС†РёРµР№ glBindTexture
     sf::Texture::bind(&textureData);
-    // В uniform кладётся текстурный индекс текстурного блока (для GL_TEXTURE0 - 0, для GL_TEXTURE1 - 1 и тд)
+    // Р’ uniform РєР»Р°РґС‘С‚СЃСЏ С‚РµРєСЃС‚СѓСЂРЅС‹Р№ РёРЅРґРµРєСЃ С‚РµРєСЃС‚СѓСЂРЅРѕРіРѕ Р±Р»РѕРєР° (РґР»СЏ GL_TEXTURE0 - 0, РґР»СЏ GL_TEXTURE1 - 1 Рё С‚Рґ)
     glUniform1i(unifTexture, 0);
 
-    // Подключаем VBO
+    glUniform1f(modId, mod);
+
+    // ГЂГЄГІГЁГўГЁГ°ГіГҐГ¬ ГІГҐГЄГ±ГІГіГ°Г­Г»Г© ГЎГ«Г®ГЄ 0, Г¤ГҐГ«Г ГІГј ГЅГІГ®ГЈГ® Г­ГҐ Г®ГЎГїГ§Г ГІГҐГ«ГјГ­Г®, ГЇГ® ГіГ¬Г®Г«Г·Г Г­ГЁГѕ
+// ГЁ ГІГ ГЄ Г ГЄГІГЁГўГЁГ°Г®ГўГ Г­ GL_TEXTURE0, ГЅГІГ® Г­ГіГ¦Г­Г® Г¤Г«Гї ГЁГ±ГЇГ®Г«ГјГ§Г®ГўГ Г­ГЁГї Г­ГҐГ±ГЄГ®Г«ГјГЄГЁГµ ГІГҐГЄГ±ГІГіГ°
+    glActiveTexture(GL_TEXTURE1);
+    // ГЋГЎВёГ°ГІГЄГ  SFML Г­Г  opengl ГґГіГ­ГЄГ¶ГЁГҐГ© glBindTexture
+    sf::Texture::bind(&textureData2);
+    // Г‚ uniform ГЄГ«Г Г¤ВёГІГ±Гї ГІГҐГЄГ±ГІГіГ°Г­Г»Г© ГЁГ­Г¤ГҐГЄГ± ГІГҐГЄГ±ГІГіГ°Г­Г®ГЈГ® ГЎГ«Г®ГЄГ  (Г¤Г«Гї GL_TEXTURE0 - 0, Г¤Г«Гї GL_TEXTURE1 - 1 ГЁ ГІГ¤)
+    glUniform1i(unifTexture2, 1);
+
+    // РџРѕРґРєР»СЋС‡Р°РµРј VBO
     glEnableVertexAttribArray(attribVertex);
     glEnableVertexAttribArray(attribColor);
     glEnableVertexAttribArray(attribTexture);
@@ -334,15 +383,15 @@ void Draw() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    // Передаем данные на видеокарту(рисуем)
+    // РџРµСЂРµРґР°РµРј РґР°РЅРЅС‹Рµ РЅР° РІРёРґРµРѕРєР°СЂС‚Сѓ(СЂРёСЃСѓРµРј)
     glDrawArrays(GL_QUADS, 0, 24);
 
-    // Отключаем массив атрибутов
+    // РћС‚РєР»СЋС‡Р°РµРј РјР°СЃСЃРёРІ Р°С‚СЂРёР±СѓС‚РѕРІ
     glDisableVertexAttribArray(attribVertex);
     glDisableVertexAttribArray(attribColor);
     glDisableVertexAttribArray(attribTexture);
 
-    // Отключаем шейдерную программу
+    // РћС‚РєР»СЋС‡Р°РµРј С€РµР№РґРµСЂРЅСѓСЋ РїСЂРѕРіСЂР°РјРјСѓ
     glUseProgram(0);
     checkOpenGLerror();
 }
