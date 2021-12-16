@@ -19,7 +19,6 @@ GLuint shaderProgram;
 GLint attribVertex;
 // ID атрибута текстурных координат
 GLint attribTexture;
-GLint attribColor;
 // ID юниформа текстуры
 GLint unifTexture;
 // ID юниформа угла поворота
@@ -29,7 +28,6 @@ GLuint vertexVBO;
 // ID буфера текстурных координат
 GLuint textureVBO;
 
-GLuint colorsVBO;
 // ID текстуры
 GLint textureHandle;
 // SFML текстура
@@ -58,10 +56,8 @@ struct Vertex
 const char* VertexShaderSource = TO_STRING(
     #version 330 core\n
 
-in vec3 vertCoord;
+    in vec3 vertCoord;
 in vec3 textureCoord;
-in vec4 color;
-out vec4 vert_color;
 out vec3 tCoord;
 void main() {
     tCoord = textureCoord;
@@ -79,7 +75,6 @@ void main() {
             0, 1, 0,
             -sin(y_angle), 0, cos(y_angle)
         );
-    vert_color = color;
     gl_Position = vec4(position, 1.0);
 }
 );
@@ -88,13 +83,13 @@ const char* FragShaderSource = TO_STRING(
     #version 330 core\n
 
     uniform sampler2D textureData;
-in vec4 vert_color;
 in vec3 tCoord;
 out vec4 color;
+
 void main()
 {
     vec4 tex = texture(textureData, tCoord.xy);
-    color = vec4(vert_color.r * tex.r, vert_color.g * tex.g, vert_color.b * tex.b, vert_color.a * tex.a);
+    color = vec4(tex.r, tex.g, tex.b, tex.a);
 }
 );
 
@@ -170,10 +165,9 @@ void ShaderLog(unsigned int shader)
 
 void InitVBO()
 {
-    glGenBuffers(1, &colorsVBO);
     glGenBuffers(1, &textureVBO);
     glGenBuffers(1, &vertexVBO);
-    
+
 
     // Объявляем вершины треугольника
     Vertex triangle[] = {
@@ -195,22 +189,12 @@ void InitVBO()
             {0,0,0},{0,1,0},{1,1,0},{1,0,0},
     };
 
-    float colors[24][4] =
-    {
-        {1.0,0.0,0.0,1.0},{0.0,1.0,0.0,1.0},{0.0,0.0,1.0,1.0},{0.0,0.0,0.0,1.0},
-        {1.0,0.0,0.0,1.0},{0.0,1.0,0.0,1.0},{1.0,1.0,0.0,1.0},{1.0,0.0,1.0,1.0},
-        {1.0,0.0,1.0,1.0},{1.0,1.0,0.0,1.0},{0.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0},
-        {0.0,0.0,0.0,1.0},{0.0,0.0,1.0,1.0},{0.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0},
-        {0.0,1.0,0.0,1.0},{0.0,0.0,1.0,1.0},{0.0,1.0,1.0,1.0},{1.0,1.0,0.0,1.0},
-        {1.0,0.0,0.0,1.0},{0.0,0.0,0.0,1.0},{1.0,1.0,1.0,1.0},{1.0,0.0,1.0,1.0}
-    };
+
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, textureVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(texture), texture, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
     checkOpenGLerror();
 }
 
@@ -255,13 +239,6 @@ void InitShader() {
         return;
     }
 
-    attribColor = glGetAttribLocation(shaderProgram, "color");
-    if (attribColor == -1)
-    {
-        std::cout << "could not bind attrib color" << std::endl;
-        return;
-    }
-
     unifTexture = glGetUniformLocation(shaderProgram, "textureData");
     if (unifTexture == -1)
     {
@@ -278,7 +255,7 @@ void InitShader() {
     }
     */
 
-    
+
     checkOpenGLerror();
 }
 
@@ -317,11 +294,7 @@ void Draw() {
 
     // Подключаем VBO
     glEnableVertexAttribArray(attribVertex);
-    glEnableVertexAttribArray(attribColor);
     glEnableVertexAttribArray(attribTexture);
-
-    glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
-    glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
     glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -330,7 +303,7 @@ void Draw() {
     glVertexAttribPointer(attribTexture, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 
-    
+
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -339,7 +312,6 @@ void Draw() {
 
     // Отключаем массив атрибутов
     glDisableVertexAttribArray(attribVertex);
-    glDisableVertexAttribArray(attribColor);
     glDisableVertexAttribArray(attribTexture);
 
     // Отключаем шейдерную программу
@@ -357,7 +329,6 @@ void ReleaseVBO()
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDeleteBuffers(1, &vertexVBO);
-    glDeleteBuffers(1, &colorsVBO);
     glDeleteBuffers(1, &textureVBO);
 }
 
