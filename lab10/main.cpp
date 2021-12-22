@@ -81,7 +81,9 @@ void main() {
             0, 1, 0,
             -sin(y_angle), 0, cos(y_angle)
         );
-    gl_Position = vec4(position, 1.0);
+    vec4 vert = vec4(position, 1.0);
+    
+    gl_Position = vec4(vert.xy / 10, vert.z * vert[3] / 100, vert[3]);
 }
 )";
 
@@ -93,8 +95,8 @@ in vec3 tCoord;
 out vec4 color;
 void main()
 {
-    vec4 tex = texture(textureData, tCoord.xy);
-    color = vec4(tex.r, tex.g, tex.b, tex.a);
+    vec3 coord = normalize(tCoord);
+    color = texture(textureData, coord.xy);
 }
 )";
 
@@ -182,7 +184,7 @@ void InitVBO()
 {
     glGenBuffers(1, &textureVBO);
     glGenBuffers(1, &vertexVBO);
-    LoadOBJ("teapot.obj", vertices, textures);
+    LoadOBJ("bus2.obj", vertices, textures);
 
 
     // Объявляем вершины треугольника
@@ -303,7 +305,7 @@ void InitShader() {
 
 void InitTexture()
 {
-    const char* filename = "image.jpg";
+    const char* filename = "bus2.png";
 
     if (!textureData.loadFromFile(filename))
     {

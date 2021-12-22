@@ -89,7 +89,6 @@ bool LoadOBJ(
         // Get the indices of its attributes
         unsigned int vertexIndex = vertexIndices[i];
         unsigned int uvIndex = uvIndices[i];
-        unsigned int normalIndex = normalIndices[i];
 
         // Get the attributes thanks to the index
         Vertex vertex = temp_vertices[vertexIndex - 1];
