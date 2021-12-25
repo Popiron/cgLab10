@@ -1,7 +1,7 @@
 ﻿  main.cpp
-C:\Users\Галушко Дмитрий\Documents\GitHub\cgLab10\lab10\main.cpp(354,50): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
+C:\Users\Галушко Дмитрий\Documents\GitHub\cgLab10\lab10\release.h(35,50): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
   Создание кода
-  0 of 201 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  18 of 201 functions ( 9.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
