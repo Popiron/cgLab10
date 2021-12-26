@@ -20,25 +20,34 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="data.h">
+    <ClInclude Include="uniforms.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="models.h">
+    <ClInclude Include="vertShader.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="logs.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="shaders.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="init.h">
+    <ClInclude Include="parser.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="release.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="ids.h">
+    <ClInclude Include="structures.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="fragShader.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="id.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="init.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="draw.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

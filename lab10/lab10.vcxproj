@@ -18,6 +18,21 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="draw.h" />
+    <ClInclude Include="fragShader.h" />
+    <ClInclude Include="id.h" />
+    <ClInclude Include="init.h" />
+    <ClInclude Include="log.h" />
+    <ClInclude Include="parser.h" />
+    <ClInclude Include="release.h" />
+    <ClInclude Include="structures.h" />
+    <ClInclude Include="uniforms.h" />
+    <ClInclude Include="vertShader.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -144,18 +159,6 @@
       <AdditionalDependencies>opengl32.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-main.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ids.h" />
-    <ClInclude Include="init.h" />
-    <ClInclude Include="logs.h" />
-    <ClInclude Include="models.h" />
-    <ClInclude Include="data.h" />
-    <ClInclude Include="release.h" />
-    <ClInclude Include="shaders.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

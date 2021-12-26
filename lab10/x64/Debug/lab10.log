@@ -1,3 +1,4 @@
 ﻿  main.cpp
-C:\Users\Галушко Дмитрий\Documents\GitHub\cgLab10\lab10\main.cpp(354,50): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
+C:\Users\Галушко Дмитрий\Documents\GitHub\cgLab10\lab10\release.h(30,50): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
+  LINK : не найден или не выполнена сборка C:\Users\Галушко Дмитрий\Documents\GitHub\cgLab10\lab10\x64\Debug\lab10.exe при последней инкрементной компоновке; выполняется полная компоновка
   lab10.vcxproj -> C:\Users\Галушко Дмитрий\Documents\GitHub\cgLab10\lab10\x64\Debug\lab10.exe
