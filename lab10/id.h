@@ -22,22 +22,18 @@ GLint unifScale;
 GLuint roadVBO;
 GLuint busVBO;
 GLuint grassVBO;
-GLuint skyVBO;
 
 GLint roadTextureHandle;
 GLint busTextureHandle;
 GLint grassTextureHandle;
-GLint skyTextureHandle;
 
 sf::Texture roadTextureData;
 sf::Texture busTextureData;
 sf::Texture grassTextureData;
-sf::Texture skyTextureData;
 
 GLuint roadVAO;
 GLuint busVAO;
 GLuint grassVAO;
-GLuint skyVAO;
 
 GLint Unif_transform_viewPosition;
 

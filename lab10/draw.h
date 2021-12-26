@@ -136,17 +136,6 @@ void Draw() {
 	glDrawArrays(GL_TRIANGLES, 0, grass_count);
 	glBindVertexArray(0);
 
-	//sky
-	glUniform3fv(unifRotate, 1, skyRotate);
-	glUniform3fv(unifMove, 1, skyMove);
-	glUniform3fv(unifScale, 1, skyScale);
-	glActiveTexture(GL_TEXTURE0);
-	sf::Texture::bind(&skyTextureData);
-	glUniform1i(unifTexture, 0);
-	glBindVertexArray(skyVAO);
-	glDrawArrays(GL_TRIANGLES, 0, sky_count);
-	glBindVertexArray(0);
-
 	glUseProgram(0);
 	checkOpenGLerror();
 }

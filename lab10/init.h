@@ -16,84 +16,51 @@
 int road_count = 0;
 int bus_count = 0;
 int grass_count = 0;
-int sky_count = 0;
 
 void InitVBO()
 {
 	//road
-	std::vector<float> pos_tex = InitializeVBO("road.obj", road_count);
+	std::vector<float> pos_tex;
 
+	loadOBJ("road.obj", pos_tex, road_count);
 	glGenBuffers(1, &roadVBO);
 	glGenVertexArrays(1, &roadVAO);
-
 	glBindVertexArray(roadVAO);
-
 	glEnableVertexAttribArray(attribVertex);
 	glEnableVertexAttribArray(attribTex);
 	glEnableVertexAttribArray(attribNormal);
 	glBindBuffer(GL_ARRAY_BUFFER, roadVBO);
 	glBufferData(GL_ARRAY_BUFFER, pos_tex.size() * sizeof(GLfloat), pos_tex.data(), GL_STATIC_DRAW);
-
 	glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 	glVertexAttribPointer(attribTex, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glVertexAttribPointer(attribNormal, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(0);
-
 	glBindVertexArray(0);
 
-	//bus
-	pos_tex = InitializeVBO("bus2.obj", bus_count);
-
+	loadOBJ("bus2.obj",pos_tex, bus_count);
 	glGenBuffers(1, &busVBO);
 	glGenVertexArrays(1, &busVAO);
-
 	glBindVertexArray(busVAO);
-
 	glEnableVertexAttribArray(attribVertex);
 	glEnableVertexAttribArray(attribTex);
 	glEnableVertexAttribArray(attribNormal);
 	glBindBuffer(GL_ARRAY_BUFFER, busVBO);
 	glBufferData(GL_ARRAY_BUFFER, pos_tex.size() * sizeof(GLfloat), pos_tex.data(), GL_STATIC_DRAW);
-
 	glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 	glVertexAttribPointer(attribTex, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glVertexAttribPointer(attribNormal, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(0);
-
 	glBindVertexArray(0);
 
-	//grass
-	pos_tex = InitializeVBO("grass.obj", grass_count);
-
+	loadOBJ("grass.obj",pos_tex, grass_count);
 	glGenBuffers(1, &grassVBO);
 	glGenVertexArrays(1, &grassVAO);
-
 	glBindVertexArray(grassVAO);
-
 	glEnableVertexAttribArray(attribVertex);
 	glEnableVertexAttribArray(attribTex);
 	glEnableVertexAttribArray(attribNormal);
 	glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
 	glBufferData(GL_ARRAY_BUFFER, pos_tex.size() * sizeof(GLfloat), pos_tex.data(), GL_STATIC_DRAW);
-
-	glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-	glVertexAttribPointer(attribTex, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glVertexAttribPointer(attribNormal, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(0);
-
-	//sky
-	pos_tex = InitializeVBO("plane.obj", sky_count);
-	glGenBuffers(1, &skyVBO);
-	glGenVertexArrays(1, &skyVAO);
-
-	glBindVertexArray(skyVAO);
-
-	glEnableVertexAttribArray(attribVertex);
-	glEnableVertexAttribArray(attribTex);
-	glEnableVertexAttribArray(attribNormal);
-	glBindBuffer(GL_ARRAY_BUFFER, skyVBO);
-	glBufferData(GL_ARRAY_BUFFER, pos_tex.size() * sizeof(GLfloat), pos_tex.data(), GL_STATIC_DRAW);
-
 	glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 	glVertexAttribPointer(attribTex, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glVertexAttribPointer(attribNormal, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
@@ -183,7 +150,6 @@ void InitTexture()
 	const char* road = "road.png";
 	const char* bus = "bus2.png";
 	const char* grass = "grass.png";
-	const char* sky = "sky.jpg";
 	if (!busTextureData.loadFromFile(bus))
 	{
 		std::cout << "could not load texture bus";
@@ -199,15 +165,9 @@ void InitTexture()
 		std::cout << "could not load texture grass";
 		return;
 	}
-	if (!skyTextureData.loadFromFile(sky))
-	{
-		std::cout << "could not load texture sky";
-		return;
-	}
 	roadTextureHandle = roadTextureData.getNativeHandle();
 	busTextureHandle = busTextureData.getNativeHandle();
 	grassTextureHandle = grassTextureData.getNativeHandle();
-	skyTextureHandle = skyTextureData.getNativeHandle();
 }
 
 

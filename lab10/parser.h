@@ -13,116 +13,108 @@
 
 #include "structures.h"
 
+bool loadOBJ(
+	const char* path,
+	std::vector<float>& res,
+	int& count
+) {
+	printf("Loading OBJ file %s...\n", path);
 
-Index slash_string_to_index(std::string s)
-{
-	std::vector<std::string> split;
-	std::stringstream ss(s);
-	std::string str;
-	while (std::getline(ss, str, '/'))
-	{
-		split.push_back(str);
+	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
+	std::vector<Vertex> temp_vertices;
+	std::vector<Tex> temp_uvs;
+	std::vector<Normal> temp_normals;
+
+
+	FILE* file = fopen(path, "r");
+	if (file == NULL) {
+		printf("Impossible to open the file ! Are you in the right path ? See Tutorial 1 for details\n");
+		getchar();
+		return false;
 	}
-	Index i = { std::stoi(split[0]), std::stoi(split[1]), std::stoi(split[2]) };
-	return i;
-}
 
-Index surface_to_index(Surface s)
-{
-	std::vector<Index> v;
-	Index i = { s.vert[0].x, s.vert[1].x, s.vert[2].x };
-	return i;
-}
+	while (1) {
 
-std::vector<float> InitializeVBO(std::string filename, int& count)
-{
-	std::vector<Vertex> v;
-	std::vector<Tex> t;
-	std::vector<Normal> n;
-	std::vector<Surface> s;
+		char lineHeader[128];
+		// read the first word of the line
+		int res = fscanf(file, "%s", lineHeader);
+		if (res == EOF)
+			break; // EOF = End Of File. Quit the loop.
 
-	std::ifstream infile(filename);
-	std::string line;
+		// else : parse lineHeader
 
-	//проходим по строкам файла
-	while (std::getline(infile, line))
-	{
-		if (line[0] == 'v' || line[0] == 'f')
-		{
-			//разбиваем каждую строку по пробелам в вектор split
-			std::vector<std::string> split;
-			std::stringstream ss(line);
-			std::string str;
-			while (std::getline(ss, str, ' '))
-			{
-				split.push_back(str);
-			}
-
-			//заполняем вектор вершин
-			if (split[0] == "v")
-			{
-				Vertex vert = { std::stof(split[1]), std::stof(split[2]), std::stof(split[3]) };
-				v.push_back(vert);
-			}
-
-			//заполняем вектор текстурных координат
-			else if (split[0] == "vt")
-			{
-				Tex tex = { std::stof(split[1]), std::stof(split[2]) };
-				t.push_back(tex);
-			}
-
-			//заполняем вектор нормалей
-			else if (split[0] == "vn")
-			{
-				Normal norm = { std::stof(split[1]), std::stof(split[2]), std::stof(split[3]) };
-				n.push_back(norm);
-			}
-
-			//заполняем массив индексов и соответствий
-			else if (split[0] == "f")
-			{
-				Surface surf =
-				{
-					slash_string_to_index(split[1]),
-					slash_string_to_index(split[2]),
-					slash_string_to_index(split[3]),
-				};
-				s.push_back(surf);
-			}
+		if (strcmp(lineHeader, "v") == 0) {
+			Vertex vertex;
+			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
+			temp_vertices.push_back(vertex);
 		}
+		else if (strcmp(lineHeader, "vt") == 0) {
+			Tex uv;
+			fscanf(file, "%f %f\n", &uv.x, &uv.y);
+			uv.y = uv.y; // Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
+			temp_uvs.push_back(uv);
+		}
+		else if (strcmp(lineHeader, "vn") == 0) {
+			Normal normal;
+			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
+			temp_normals.push_back(normal);
+		}
+		else if (strcmp(lineHeader, "f") == 0) {
+			std::string vertex1, vertex2, vertex3;
+			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+			if (matches != 9) {
+				printf("File can't be read by our simple parser :-( Try exporting with other options\n");
+				fclose(file);
+				return false;
+			}
+			vertexIndices.push_back(vertexIndex[0]);
+			vertexIndices.push_back(vertexIndex[1]);
+			vertexIndices.push_back(vertexIndex[2]);
+			uvIndices.push_back(uvIndex[0]);
+			uvIndices.push_back(uvIndex[1]);
+			uvIndices.push_back(uvIndex[2]);
+			normalIndices.push_back(normalIndex[0]);
+			normalIndices.push_back(normalIndex[1]);
+			normalIndices.push_back(normalIndex[2]);
+		}
+		else {
+			// Probably a comment, eat up the rest of the line
+			char stupidBuffer[1000];
+			fgets(stupidBuffer, 1000, file);
+		}
+
 	}
 
-	std::vector<float> pos_tex;
-	for (int i = 0; i < s.size(); ++i)
-	{
-		pos_tex.push_back(v[s[i].vert[0].x - 1].x);
-		pos_tex.push_back(v[s[i].vert[0].x - 1].y);
-		pos_tex.push_back(v[s[i].vert[0].x - 1].z);
-		pos_tex.push_back(t[s[i].vert[0].y - 1].x);
-		pos_tex.push_back(1 - t[s[i].vert[0].y - 1].y);
-		pos_tex.push_back(n[s[i].vert[0].z - 1].x);
-		pos_tex.push_back(n[s[i].vert[0].z - 1].y);
-		pos_tex.push_back(n[s[i].vert[0].z - 1].z);
+	std::vector<float> result;
 
-		pos_tex.push_back(v[s[i].vert[1].x - 1].x);
-		pos_tex.push_back(v[s[i].vert[1].x - 1].y);
-		pos_tex.push_back(v[s[i].vert[1].x - 1].z);
-		pos_tex.push_back(t[s[i].vert[1].y - 1].x);
-		pos_tex.push_back(1 - t[s[i].vert[1].y - 1].y);
-		pos_tex.push_back(n[s[i].vert[1].z - 1].x);
-		pos_tex.push_back(n[s[i].vert[1].z - 1].y);
-		pos_tex.push_back(n[s[i].vert[1].z - 1].z);
+	// For each vertex of each triangle
+	for (unsigned int i = 0; i < vertexIndices.size(); i++) {
 
-		pos_tex.push_back(v[s[i].vert[2].x - 1].x);
-		pos_tex.push_back(v[s[i].vert[2].x - 1].y);
-		pos_tex.push_back(v[s[i].vert[2].x - 1].z);
-		pos_tex.push_back(t[s[i].vert[2].y - 1].x);
-		pos_tex.push_back(1 - t[s[i].vert[2].y - 1].y);
-		pos_tex.push_back(n[s[i].vert[2].z - 1].x);
-		pos_tex.push_back(n[s[i].vert[2].z - 1].y);
-		pos_tex.push_back(n[s[i].vert[2].z - 1].z);
+		// Get the indices of its attributes
+		unsigned int vertexIndex = vertexIndices[i];
+		unsigned int uvIndex = uvIndices[i];
+		unsigned int normalIndex = normalIndices[i];
+
+		// Get the attributes thanks to the index
+		Vertex vertex = temp_vertices[vertexIndex - 1];
+		Tex uv = temp_uvs[uvIndex - 1];
+		Normal normal = temp_normals[normalIndex - 1];
+
+		// Put the attributes in buffers
+		result.push_back(vertex.x);
+		result.push_back(vertex.y);
+		result.push_back(vertex.z);
+
+		result.push_back(uv.x);
+		result.push_back(1 - uv.y);
+
+		result.push_back(normal.x);
+		result.push_back(normal.y);
+		result.push_back(normal.z);
 	}
-	count = s.size() * 3;
-	return pos_tex;
+	fclose(file);
+	count = vertexIndices.size();
+	res = result;
+	return true;
 }
