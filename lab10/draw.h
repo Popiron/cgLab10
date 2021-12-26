@@ -6,7 +6,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "id.h"
-#include "structures.h"
 #include "log.h"
 #include "uniforms.h"
 
@@ -31,9 +30,9 @@ void Draw() {
 
 
 	//bus
-	glUniform3fv(unifRotate, 1, busRotate);
-	glUniform3fv(unifMove, 1, busMove);
-	glUniform3fv(unifScale, 1, busScale);
+	glUniform3fv(unifRotate, 1, RotationBus);
+	glUniform3fv(unifMove, 1, MovementBus);
+	glUniform3fv(unifScale, 1, ScalingBus);
 	glActiveTexture(GL_TEXTURE0);
 	sf::Texture::bind(&busTextureData);
 	glUniform1i(unifTexture, 0);
@@ -42,9 +41,9 @@ void Draw() {
 	glBindVertexArray(0);
 
 	//road1
-	glUniform3fv(unifRotate, 1, roadRotate);
-	glUniform3fv(unifMove, 1, road1Move);
-	glUniform3fv(unifScale, 1, roadScale);
+	glUniform3fv(unifRotate, 1, RotationRoad);
+	glUniform3fv(unifMove, 1, MovementRoad1);
+	glUniform3fv(unifScale, 1, ScalingRoad);
 	glActiveTexture(GL_TEXTURE0);
 	sf::Texture::bind(&roadTextureData);
 	glUniform1i(unifTexture, 0);
@@ -53,9 +52,9 @@ void Draw() {
 	glBindVertexArray(0);
 
 	//road2
-	glUniform3fv(unifRotate, 1, roadRotate);
-	glUniform3fv(unifMove, 1, road2Move);
-	glUniform3fv(unifScale, 1, roadScale);
+	glUniform3fv(unifRotate, 1, RotationRoad);
+	glUniform3fv(unifMove, 1, MovementRoad2);
+	glUniform3fv(unifScale, 1, ScalingRoad);
 	glActiveTexture(GL_TEXTURE0);
 	sf::Texture::bind(&roadTextureData);
 	glUniform1i(unifTexture, 0);
@@ -64,9 +63,9 @@ void Draw() {
 	glBindVertexArray(0);
 
 	//road3
-	glUniform3fv(unifRotate, 1, roadRotate);
-	glUniform3fv(unifMove, 1, road3Move);
-	glUniform3fv(unifScale, 1, roadScale);
+	glUniform3fv(unifRotate, 1, RotationRoad);
+	glUniform3fv(unifMove, 1, MovementRoad3);
+	glUniform3fv(unifScale, 1, ScalingRoad);
 	glActiveTexture(GL_TEXTURE0);
 	sf::Texture::bind(&roadTextureData);
 	glUniform1i(unifTexture, 0);
@@ -75,9 +74,9 @@ void Draw() {
 	glBindVertexArray(0);
 
 	//grassleft1
-	glUniform3fv(unifRotate, 1, grassLeftRotate);
-	glUniform3fv(unifMove, 1, grassLeft1Move);
-	glUniform3fv(unifScale, 1, grassScale);
+	glUniform3fv(unifRotate, 1, RotationLeftGrass);
+	glUniform3fv(unifMove, 1, MovementLeftGrass1);
+	glUniform3fv(unifScale, 1, ScalingGrass);
 	glActiveTexture(GL_TEXTURE0);
 	sf::Texture::bind(&grassTextureData);
 	glUniform1i(unifTexture, 0);
@@ -85,9 +84,9 @@ void Draw() {
 	glDrawArrays(GL_TRIANGLES, 0, grass_count);
 	glBindVertexArray(0);
 	//grassleft2
-	glUniform3fv(unifRotate, 1, grassLeftRotate);
-	glUniform3fv(unifMove, 1, grassLeft2Move);
-	glUniform3fv(unifScale, 1, grassScale);
+	glUniform3fv(unifRotate, 1, RotationLeftGrass);
+	glUniform3fv(unifMove, 1, MovementLeftGrass2);
+	glUniform3fv(unifScale, 1, ScalingGrass);
 	glActiveTexture(GL_TEXTURE0);
 	sf::Texture::bind(&grassTextureData);
 	glUniform1i(unifTexture, 0);
@@ -95,9 +94,9 @@ void Draw() {
 	glDrawArrays(GL_TRIANGLES, 0, grass_count);
 	glBindVertexArray(0);
 	//grassleft3
-	glUniform3fv(unifRotate, 1, grassLeftRotate);
-	glUniform3fv(unifMove, 1, grassLeft3Move);
-	glUniform3fv(unifScale, 1, grassScale);
+	glUniform3fv(unifRotate, 1, RotationLeftGrass);
+	glUniform3fv(unifMove, 1, MovementLeftGrass3);
+	glUniform3fv(unifScale, 1, ScalingGrass);
 	glActiveTexture(GL_TEXTURE0);
 	sf::Texture::bind(&grassTextureData);
 	glUniform1i(unifTexture, 0);
@@ -106,9 +105,9 @@ void Draw() {
 	glBindVertexArray(0);
 
 	//grassright1
-	glUniform3fv(unifRotate, 1, grassRightRotate);
-	glUniform3fv(unifMove, 1, grassRight1Move);
-	glUniform3fv(unifScale, 1, grassScale);
+	glUniform3fv(unifRotate, 1, RotationRightGrass);
+	glUniform3fv(unifMove, 1, MovementRightGrass1);
+	glUniform3fv(unifScale, 1, ScalingGrass);
 	glActiveTexture(GL_TEXTURE0);
 	sf::Texture::bind(&grassTextureData);
 	glUniform1i(unifTexture, 0);
@@ -116,9 +115,9 @@ void Draw() {
 	glDrawArrays(GL_TRIANGLES, 0, grass_count);
 	glBindVertexArray(0);
 	//grassright2
-	glUniform3fv(unifRotate, 1, grassRightRotate);
-	glUniform3fv(unifMove, 1, grassRight2Move);
-	glUniform3fv(unifScale, 1, grassScale);
+	glUniform3fv(unifRotate, 1, RotationRightGrass);
+	glUniform3fv(unifMove, 1, MovementRightGrass2);
+	glUniform3fv(unifScale, 1, ScalingGrass);
 	glActiveTexture(GL_TEXTURE0);
 	sf::Texture::bind(&grassTextureData);
 	glUniform1i(unifTexture, 0);
@@ -126,9 +125,9 @@ void Draw() {
 	glDrawArrays(GL_TRIANGLES, 0, grass_count);
 	glBindVertexArray(0);
 	//grassright3
-	glUniform3fv(unifRotate, 1, grassRightRotate);
-	glUniform3fv(unifMove, 1, grassRight3Move);
-	glUniform3fv(unifScale, 1, grassScale);
+	glUniform3fv(unifRotate, 1, RotationRightGrass);
+	glUniform3fv(unifMove, 1, MovementRightGrass3);
+	glUniform3fv(unifScale, 1, ScalingGrass);
 	glActiveTexture(GL_TEXTURE0);
 	sf::Texture::bind(&grassTextureData);
 	glUniform1i(unifTexture, 0);

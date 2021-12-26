@@ -1,38 +1,37 @@
 #pragma once
 
-float busRotate[3] = { 0.0f, -3.14f, 0.0f };
-float busMove[3] = { 0.0f, -1.0f, 0.7f };
-float busScale[3] = { 0.07f, 0.07f, 0.07f };
+float MovementBus[3] = { 0.0f, -1.0f, 0.3f };
+float RotationBus[3] = { 0.0f, -3.14f, 0.0f };
+float ScalingBus[3] = { 0.1f, 0.1f, 0.1f };
 
-float road1Move[3] = { 0.0f, -1.0f, 10.0f };
-float road2Move[3] = { 0.0f, -1.0f, 30.0f };
-float road3Move[3] = { 0.0f, -1.0f, 50.0f };
-float roadRotate[3] = { 0.0f, 0.0f, 0.0f };
-float roadScale[3] = { 0.1f, 0.1f, 0.1f };
+float MovementRoad1[3] = { 0.0f, -1.0f, 10.0f };
+float MovementRoad2[3] = { 0.0f, -1.0f, 30.0f };
+float MovementRoad3[3] = { 0.0f, -1.0f, 50.0f };
+float RotationRoad[3] = { 0.0f, 0.0f, 0.0f };
+float ScalingRoad[3] = { 0.1f, 0.1f, 0.1f };
 
-float grassLeftRotate[3] = { 0.0f, -3.1415f, 0.0f };
-float grassRightRotate[3] = { 0.0f, 0.0f, 0.0f };
-float grassLeft1Move[3] = { -11.5f, -1.0f, 10.0f };
-float grassLeft2Move[3] = { -11.5f, -1.0f, 30.0f };
-float grassLeft3Move[3] = { -11.5f, -1.0f, 50.0f };
-float grassRight1Move[3] = { 11.5f, -1.0f, 10.0f };
-float grassRight2Move[3] = { 11.5f, -1.0f, 30.0f };
-float grassRight3Move[3] = { 11.5f, -1.0f, 50.0f };
-float grassScale[3] = { 0.1f, 0.1f, 0.1f };
+float MovementLeftGrass1[3] = { -11.5f, -1.0f, 10.0f };
+float MovementLeftGrass2[3] = { -11.5f, -1.0f, 30.0f };
+float MovementLeftGrass3[3] = { -11.5f, -1.0f, 50.0f };
 
-float skyRotate[3] = { -1.7f, 0.0f, 3.1415f };
-float skyMove[3] = { 0.0f, 23.0f, 30.0f };
-float skyScale[3] = { 100.0f, 20.0f, 50.0f };
+float MovementRightGrass1[3] = { 11.5f, -1.0f, 10.0f };
+float MovementRightGrass2[3] = { 11.5f, -1.0f, 30.0f };
+float MovementRightGrass3[3] = { 11.5f, -1.0f, 50.0f };
 
-float viewPosition[3] = { 0.0, 0.0, -100.0 };
+float RotationLeftGrass[3] = { 0.0f, -3.1415f, 0.0f };
+float RotationRightGrass[3] = { 0.0f, 0.0f, 0.0f };
+
+float ScalingGrass[3] = { 0.1f, 0.1f, 0.1f };
+
+float viewPosition[3] = { 0.0, 0.0, -100.0f };
 
 struct Material
 {
-	float emission[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	float ambient[4] = { 0.1f, 0.1f, 0.1f , 1.0f };
 	float diffuse[4] = { 1.0f, 1.0f, 1.0f , 1.0f };
 	float specular[4] = { 1.0f, 1.0f, 1.0f , 1.0f };
-	float shininess = 128.0f;
+	float emission[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float shininess = 100.0f;
 };
 Material material;
 

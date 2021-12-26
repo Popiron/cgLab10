@@ -20,6 +20,7 @@ int main() {
 
 	bool moveLeft = false;
 	bool moveRight = false;
+	bool isLightsOff = false;
 
 	double angle = 0.524;
 	double radius = 150.0;
@@ -47,11 +48,15 @@ int main() {
 				}
 				case (sf::Keyboard::Left):
 				{
+					if (isLightsOff)
+						break;
 					light.direction[0] -= 5.0;
 					break;
 				}
 				case (sf::Keyboard::Right):
 				{
+					if (isLightsOff)
+						break;
 					angle += 0.1;
 					light.direction[0] = radius * std::sin(angle) - 50;
 					light.direction[1] = radius * std::cos(angle);
@@ -59,6 +64,8 @@ int main() {
 				}
 				case (sf::Keyboard::Up):
 				{
+					if (isLightsOff)
+						break;
 					angle -= 0.1;
 					light.direction[0] = radius * std::sin(angle) - 50;
 					light.direction[1] = radius * std::cos(angle);
@@ -66,7 +73,24 @@ int main() {
 				}
 				case (sf::Keyboard::Down):
 				{
+					if (isLightsOff)
+						break;
 					light.direction[2] -= 1.0;
+					break;
+				}
+				case (sf::Keyboard::N):
+				{
+					if (isLightsOff) {
+						light.direction[0] = 0.0f;
+						light.direction[1] = 80.0f;
+						light.direction[2] = -150.0f;
+					}
+					else {
+						light.direction[0] = 0.0f;
+						light.direction[1] = 0.0f;
+						light.direction[2] = 0.0f;
+					}
+					isLightsOff = !isLightsOff;
 					break;
 				}
 				default: break;
@@ -89,56 +113,54 @@ int main() {
 			}
 		}
 
-		std::cout << light.direction[0] << " " << light.direction[1] << std::endl;
-
 		if (moveLeft)
 		{
-			busMove[0] -= 0.05;
-			busRotate[1] -= 0.05;
+			MovementBus[0] -= 0.05;
+			RotationBus[1] -= 0.04;
 		}
 		if (moveRight)
 		{
-			busMove[0] += 0.05;
-			busRotate[1] += 0.05;
+			MovementBus[0] += 0.05;
+			RotationBus[1] += 0.04;
 		}
 
-		if (busRotate[1] < -3.14f && std::abs(busRotate[1] + 3.14) > 0.1f)
-			busRotate[1] += 0.03f;
-		else if (busRotate[1] > -3.14f && std::abs(busRotate[1] + 3.14) > 0.1f)
-			busRotate[1] -= 0.03f;
-		if (std::abs(busMove[1] + 0.25) < 0.01f)
-			busMove[1] += 1.0f;
+		if (RotationBus[1] < -3.14f && std::abs(RotationBus[1] + 3.14) > 0.05f)
+			RotationBus[1] += 0.03f;
+		else if (RotationBus[1] > -3.14f && std::abs(RotationBus[1] + 3.14) > 0.05f)
+			RotationBus[1] -= 0.03f;
+		if (std::abs(MovementBus[1] + 0.25) < 0.01f)
+			MovementBus[1] += 1.0f;
 
-		road1Move[2] -= 0.07;
-		road2Move[2] -= 0.07;
-		road3Move[2] -= 0.07;
-		if (std::abs(road1Move[2] + 10) < 0.1)
-			road1Move[2] = 10;
-		if (std::abs(road2Move[2] - 10) < 0.1)
-			road2Move[2] = 30;
-		if (std::abs(road3Move[2] - 30) < 0.1)
-			road3Move[2] = 50;
+		MovementRoad1[2] -= 0.1;
+		MovementRoad2[2] -= 0.1;
+		MovementRoad3[2] -= 0.1;
+		if (std::abs(MovementRoad1[2] + 10) < 0.1)
+			MovementRoad1[2] = 10 + std::abs(MovementRoad1[2] + 10);
+		if (std::abs(MovementRoad2[2] - 10) < 0.1)
+			MovementRoad2[2] = 30 + std::abs(MovementRoad2[2] - 10);
+		if (std::abs(MovementRoad3[2] - 30) < 0.1)
+			MovementRoad3[2] = 50 + std::abs(MovementRoad3[2] - 30);
 
-		grassLeft1Move[2] -= 0.07;
-		grassLeft2Move[2] -= 0.07;
-		grassLeft3Move[2] -= 0.07;
-		grassRight1Move[2] -= 0.07;
-		grassRight2Move[2] -= 0.07;
-		grassRight3Move[2] -= 0.07;
+		MovementLeftGrass1[2] -= 0.1;
+		MovementLeftGrass2[2] -= 0.1;
+		MovementLeftGrass3[2] -= 0.1;
+		MovementRightGrass1[2] -= 0.1;
+		MovementRightGrass2[2] -= 0.1;
+		MovementRightGrass3[2] -= 0.1;
 
-		if (std::abs(grassLeft1Move[2] + 10) < 0.1)
-			grassLeft1Move[2] = 10;
-		if (std::abs(grassLeft2Move[2] - 10) < 0.1)
-			grassLeft2Move[2] = 30;
-		if (std::abs(grassLeft3Move[2] - 30) < 0.1)
-			grassLeft3Move[2] = 50;
+		if (std::abs(MovementLeftGrass1[2] + 10) < 0.1)
+			MovementLeftGrass1[2] = 10 + std::abs(MovementLeftGrass1[2] + 10);
+		if (std::abs(MovementLeftGrass2[2] - 10) < 0.1)
+			MovementLeftGrass2[2] = 30 + std::abs(MovementLeftGrass2[2] - 10);
+		if (std::abs(MovementLeftGrass3[2] - 30) < 0.1)
+			MovementLeftGrass3[2] = 50 + std::abs(MovementLeftGrass3[2] - 30);
 
-		if (std::abs(grassRight1Move[2] + 10) < 0.1)
-			grassRight1Move[2] = 10;
-		if (std::abs(grassRight2Move[2] - 10) < 0.1)
-			grassRight2Move[2] = 30;
-		if (std::abs(grassRight3Move[2] - 30) < 0.1)
-			grassRight3Move[2] = 50;
+		if (std::abs(MovementRightGrass1[2] + 10) < 0.1)
+			MovementRightGrass1[2] = 10 + std::abs(MovementRightGrass1[2] + 10);
+		if (std::abs(MovementRightGrass2[2] - 10) < 0.1)
+			MovementRightGrass2[2] = 30 + std::abs(MovementRightGrass2[2] - 10);
+		if (std::abs(MovementRightGrass3[2] - 30) < 0.1)
+			MovementRightGrass3[2] = 50 + std::abs(MovementRightGrass3[2] - 30);
 
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

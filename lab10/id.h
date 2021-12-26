@@ -9,7 +9,7 @@ GLuint shaderProgram;
 
 GLint attribVertex;
 
-GLint attribTex;
+GLint attribTexture;
 
 GLint attribNormal;
 

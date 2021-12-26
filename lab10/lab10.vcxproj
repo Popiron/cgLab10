@@ -23,15 +23,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="draw.h" />
-    <ClInclude Include="fragShader.h" />
+    <ClInclude Include="shader.h" />
     <ClInclude Include="id.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="log.h" />
-    <ClInclude Include="parser.h" />
+    <ClInclude Include="source.h" />
     <ClInclude Include="release.h" />
-    <ClInclude Include="structures.h" />
+    <ClInclude Include="models.h" />
     <ClInclude Include="uniforms.h" />
-    <ClInclude Include="vertShader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

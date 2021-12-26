@@ -12,7 +12,6 @@ void ReleaseShader() {
 	glDeleteProgram(shaderProgram);
 }
 
-// Освобождение буфера
 void ReleaseVBO()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
