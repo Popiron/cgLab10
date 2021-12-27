@@ -7,8 +7,34 @@
 #include "release.h"
 #include "draw.h"
 
+float RandomFloat(float a, float b) {
+	float random = ((float)rand()) / (float)RAND_MAX;
+	float diff = b - a;
+	float r = random * diff;
+	return a + r;
+}
+
+bool CollisionDetection(float center[3] , float radius) {
+	float distance = sqrt((center[0] - MovementBus[0]) * (center[0] - MovementBus[0]) + (center[1] - MovementBus[1]) * (center[1] - MovementBus[1]) + (center[2] - MovementBus[2]) * (center[2] - MovementBus[2]));
+	float RadiusBus = 0.3;
+	return distance < (radius + RadiusBus);
+}
+
+void GameRestart() {
+	MovementBox[2] = -10;
+	MovementLos[2] = -10;
+
+	MovementBus[0] = 0.0f;
+	MovementBus[1] = -1.0f;
+	MovementBus[2] = 0.3f;
+
+	RotationBus[0] = 0.0f;
+	RotationBus[1] = -3.14f;
+	RotationBus[2] = 0.0f;
+}
+
 int main() {
-	sf::Window window(sf::VideoMode(700, 700), "Subway Surf", sf::Style::Default, sf::ContextSettings(24));
+	sf::Window window(sf::VideoMode(700, 700), "Main", sf::Style::Default, sf::ContextSettings(24));
 	window.setVerticalSyncEnabled(true);
 	window.setActive(true);
 
@@ -113,12 +139,12 @@ int main() {
 			}
 		}
 
-		if (moveLeft)
+		if (moveLeft && MovementBus[0]>=-1.3)
 		{
 			MovementBus[0] -= 0.05;
 			RotationBus[1] -= 0.04;
 		}
-		if (moveRight)
+		if (moveRight && MovementBus[0] <= 1.3)
 		{
 			MovementBus[0] += 0.05;
 			RotationBus[1] += 0.04;
@@ -162,6 +188,42 @@ int main() {
 		if (std::abs(MovementRightGrass3[2] - 30) < 0.1)
 			MovementRightGrass3[2] = 50 + std::abs(MovementRightGrass3[2] - 30);
 
+		if (MovementLos[2] >= 0.1)
+			MovementLos[2] -= 0.1;
+
+		if (MovementBox[2] >= 0.1)
+			MovementBox[2] -= 0.1;
+
+		if (CollisionDetection(MovementLos, 0.1))
+		{
+			std::cout << "Los collision detection. Restart game" << std::endl;
+			GameRestart();
+		}
+		
+
+		if (CollisionDetection(MovementBox, 0.1))
+		{
+			std::cout << "Box collision detection. Restart game" << std::endl;
+			GameRestart();
+		}
+
+		if (MovementLos[2] < 0.1 && MovementBox[2] < 0.1) {
+			int b = rand() % 2;
+			if (b) {
+				MovementLos[2] = 50;
+				MovementLos[0] = RandomFloat(-1.3, 1.3);
+
+				MovementBox[2] = -10;
+			}
+			else {
+				MovementBox[2] = 50;
+				MovementBox[0] = RandomFloat(-1.3, 1.3);
+
+				MovementLos[2] = -10;
+
+			}
+		}
+			
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

@@ -25,6 +25,14 @@ float ScalingGrass[3] = { 0.1f, 0.1f, 0.1f };
 
 float viewPosition[3] = { 0.0, 0.0, -100.0f };
 
+float MovementLos[3] = { 0.0f, -1.0f, -10.0f };
+float RotationLos[3] = { 0.0f, 0.0f, 0.0f };
+float ScalingLos[3] = { 0.1f, 0.1f, 0.1f };
+
+float MovementBox[3] = { 0.0f, -1.0f, -10.0f };
+float RotationBox[3] = { 0.0f, 0.0f, 0.0f };
+float ScalingBox[3] = { 0.1f, 0.1f, 0.1f };
+
 struct Material
 {
 	float ambient[4] = { 0.1f, 0.1f, 0.1f , 1.0f };

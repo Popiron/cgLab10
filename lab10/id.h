@@ -8,43 +8,50 @@
 GLuint shaderProgram;
 
 GLint attribVertex;
-
 GLint attribTexture;
-
 GLint attribNormal;
 
-GLint unifTexture;
-
-GLint unifRotate;
-GLint unifMove;
-GLint unifScale;
+GLint unifRotation;
+GLint unifMovement;
+GLint unifScaling;
 
 GLuint roadVBO;
 GLuint busVBO;
 GLuint grassVBO;
+GLuint losVBO;
+GLuint boxVBO;
 
-GLint roadTextureHandle;
-GLint busTextureHandle;
-GLint grassTextureHandle;
-
-sf::Texture roadTextureData;
-sf::Texture busTextureData;
-sf::Texture grassTextureData;
 
 GLuint roadVAO;
 GLuint busVAO;
 GLuint grassVAO;
+GLuint losVAO;
+GLuint boxVAO;
 
-GLint Unif_transform_viewPosition;
 
-GLint Unif_material_emission;
-GLint Unif_material_ambient;
-GLint Unif_material_diffuse;
-GLint Unif_material_specular;
-GLint Unif_material_shininess;
+sf::Texture roadTextureData;
+sf::Texture busTextureData;
+sf::Texture grassTextureData;
+sf::Texture losTextureData;
+sf::Texture boxTextureData;
 
-GLint Unif_light_ambient;
-GLint Unif_light_diffuse;
-GLint Unif_light_specular;
-GLint Unif_light_attenuation;
-GLint Unif_light_direction;
+GLint unifTexture;
+GLint roadTextureHandle;
+GLint busTextureHandle;
+GLint grassTextureHandle;
+GLint losTextureHandle;
+GLint boxTextureHandle;
+
+GLint unifTransformViewPosition;
+
+GLint unifMaterialEmission;
+GLint unifMaterialAmbient;
+GLint unifMaterialDiffuse;
+GLint unifMaterialSpecular;
+GLint unifMaterialShininess;
+
+GLint unifLightAmbient;
+GLint unifLightDiffuse;
+GLint unifLightSpecular;
+GLint unifLightAttenuation;
+GLint unifLightDirection;

@@ -15,10 +15,11 @@
 int road_count = 0;
 int bus_count = 0;
 int grass_count = 0;
+int los_count = 0;
+int box_count = 0;
 
 void InitVBO()
 {
-	//road
 	std::vector<float> pos_tex;
 
 	loadOBJ("road.obj", pos_tex, road_count);
@@ -59,6 +60,34 @@ void InitVBO()
 	glEnableVertexAttribArray(attribTexture);
 	glEnableVertexAttribArray(attribNormal);
 	glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
+	glBufferData(GL_ARRAY_BUFFER, pos_tex.size() * sizeof(GLfloat), pos_tex.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(attribTexture, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(attribNormal, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(0);
+
+	loadOBJ("los.obj", pos_tex, los_count);
+	glGenBuffers(1, &losVBO);
+	glGenVertexArrays(1, &losVAO);
+	glBindVertexArray(losVAO);
+	glEnableVertexAttribArray(attribVertex);
+	glEnableVertexAttribArray(attribTexture);
+	glEnableVertexAttribArray(attribNormal);
+	glBindBuffer(GL_ARRAY_BUFFER, losVBO);
+	glBufferData(GL_ARRAY_BUFFER, pos_tex.size() * sizeof(GLfloat), pos_tex.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(attribTexture, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(attribNormal, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(0);
+
+	loadOBJ("box.obj", pos_tex, box_count);
+	glGenBuffers(1, &boxVBO);
+	glGenVertexArrays(1, &boxVAO);
+	glBindVertexArray(boxVAO);
+	glEnableVertexAttribArray(attribVertex);
+	glEnableVertexAttribArray(attribTexture);
+	glEnableVertexAttribArray(attribNormal);
+	glBindBuffer(GL_ARRAY_BUFFER, boxVBO);
 	glBufferData(GL_ARRAY_BUFFER, pos_tex.size() * sizeof(GLfloat), pos_tex.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 	glVertexAttribPointer(attribTexture, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
@@ -123,92 +152,92 @@ void InitShader() {
 		return;
 	}
 
-	unifRotate = glGetUniformLocation(shaderProgram, "rotate");
-	if (unifRotate == -1)
+	unifRotation = glGetUniformLocation(shaderProgram, "rotate");
+	if (unifRotation == -1)
 	{
 		std::cout << "could not bind uniform rotate" << std::endl;
 		return;
 	}
 
-	unifMove = glGetUniformLocation(shaderProgram, "move");
-	if (unifTexture == -1)
+	unifMovement = glGetUniformLocation(shaderProgram, "move");
+	if (unifMovement == -1)
 	{
 		std::cout << "could not bind uniform move" << std::endl;
 		return;
 	}
 
-	unifScale = glGetUniformLocation(shaderProgram, "scale");
-	if (unifScale == -1)
+	unifScaling = glGetUniformLocation(shaderProgram, "scale");
+	if (unifScaling == -1)
 	{
 		std::cout << "could not bind uniform scale" << std::endl;
 		return;
 	}
 
-	Unif_transform_viewPosition = glGetUniformLocation(shaderProgram, "viewPosition");
-	if (Unif_transform_viewPosition == -1)
+	unifTransformViewPosition = glGetUniformLocation(shaderProgram, "viewPosition");
+	if (unifTransformViewPosition == -1)
 	{
 		std::cout << "could not bind uniform viewPosition" << std::endl;
 		return;
 	}
 
-	Unif_material_emission = glGetUniformLocation(shaderProgram, "material.emission");
-	if (Unif_material_emission == -1)
+	unifMaterialEmission = glGetUniformLocation(shaderProgram, "material.emission");
+	if (unifMaterialEmission == -1)
 	{
 		std::cout << "could not bind uniform material.emission" << std::endl;
 		return;
 	}
 
-	Unif_material_ambient = glGetUniformLocation(shaderProgram, "material.ambient");
-	if (Unif_material_ambient == -1)
+	unifMaterialAmbient = glGetUniformLocation(shaderProgram, "material.ambient");
+	if (unifMaterialAmbient == -1)
 	{
 		std::cout << "could not bind uniform material.ambient" << std::endl;
 		return;
 	}
 
-	Unif_material_diffuse = glGetUniformLocation(shaderProgram, "material.diffuse");
-	if (Unif_material_diffuse == -1)
+	unifMaterialDiffuse = glGetUniformLocation(shaderProgram, "material.diffuse");
+	if (unifMaterialDiffuse == -1)
 	{
 		std::cout << "could not bind uniform material.diffuse" << std::endl;
 		return;
 	}
 
-	Unif_material_specular = glGetUniformLocation(shaderProgram, "material.specular");
-	if (Unif_material_specular == -1)
+	unifMaterialSpecular = glGetUniformLocation(shaderProgram, "material.specular");
+	if (unifMaterialSpecular == -1)
 	{
 		std::cout << "could not bind uniform material.specular" << std::endl;
 		return;
 	}
 
-	Unif_material_shininess = glGetUniformLocation(shaderProgram, "material.shininess");
-	if (Unif_material_shininess == -1)
+	unifMaterialShininess = glGetUniformLocation(shaderProgram, "material.shininess");
+	if (unifMaterialShininess == -1)
 	{
 		std::cout << "could not bind uniform material.shininess" << std::endl;
 		return;
 	}
 
-	Unif_light_ambient = glGetUniformLocation(shaderProgram, "light.ambient");
-	if (Unif_light_ambient == -1)
+	unifLightAmbient = glGetUniformLocation(shaderProgram, "light.ambient");
+	if (unifLightAmbient == -1)
 	{
 		std::cout << "could not bind uniform light.ambient" << std::endl;
 		return;
 	}
 
-	Unif_light_diffuse = glGetUniformLocation(shaderProgram, "light.diffuse");
-	if (Unif_light_diffuse == -1)
+	unifLightDiffuse = glGetUniformLocation(shaderProgram, "light.diffuse");
+	if (unifLightDiffuse == -1)
 	{
 		std::cout << "could not bind uniform light.diffuse" << std::endl;
 		return;
 	}
 
-	Unif_light_specular = glGetUniformLocation(shaderProgram, "light.specular");
-	if (Unif_light_specular == -1)
+	unifLightSpecular = glGetUniformLocation(shaderProgram, "light.specular");
+	if (unifLightSpecular == -1)
 	{
 		std::cout << "could not bind uniform light.specular" << std::endl;
 		return;
 	}
 
-	Unif_light_direction = glGetUniformLocation(shaderProgram, "light.direction");
-	if (Unif_light_direction == -1)
+	unifLightDirection = glGetUniformLocation(shaderProgram, "light.direction");
+	if (unifLightDirection == -1)
 	{
 		std::cout << "could not bind uniform light.direction" << std::endl;
 		return;
@@ -222,6 +251,8 @@ void InitTexture()
 	const char* road = "road.png";
 	const char* bus = "bus2.png";
 	const char* grass = "grass.png";
+	const char* los = "los.png";
+	const char* box = "box.png";
 	if (!busTextureData.loadFromFile(bus))
 	{
 		std::cout << "could not load texture bus";
@@ -237,9 +268,22 @@ void InitTexture()
 		std::cout << "could not load texture grass";
 		return;
 	}
+	if (!losTextureData.loadFromFile(los))
+	{
+		std::cout << "could not load texture los";
+		return;
+	}
+	if (!boxTextureData.loadFromFile(box))
+	{
+		std::cout << "could not load texture box";
+		return;
+	}
 	roadTextureHandle = roadTextureData.getNativeHandle();
 	busTextureHandle = busTextureData.getNativeHandle();
 	grassTextureHandle = grassTextureData.getNativeHandle();
+	losTextureHandle = losTextureData.getNativeHandle();
+	boxTextureHandle = boxTextureData.getNativeHandle();
+
 }
 
 

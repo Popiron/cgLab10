@@ -33,15 +33,16 @@ const char* VertexShaderSource = R"(
 		float x_scale = scale[0];
 		float y_scale = scale[1];
 		float z_scale = scale[2];
-		vec3 vertex = coord * mat3(
-									x_scale, 0, 0,
-									0, y_scale, 0,
-									0, 0, z_scale);	
 
 		float x_angle = rotate[0];
         float y_angle = rotate[1];
 		float z_angle = rotate[2];
-        
+
+		mat3 scale_matr = mat3(
+									x_scale, 0, 0,
+									0, y_scale, 0,
+									0, 0, z_scale);
+
         // Поворачиваем вершину
         mat3 rotate = mat3(
             1, 0, 0,
@@ -57,28 +58,33 @@ const char* VertexShaderSource = R"(
 			0, 0, 1
 		);	
 
-		vertex *= rotate;
+		vec3 vertex = coord * scale_matr * rotate;	
+
+        vec4 vert = vec4(vertex, 1.0);
 
 		float x_move = move[0];
         float y_move = move[1];
 		float z_move = move[2];
-        
-        vec4 vert = vec4(vertex, 1.0);
 
-		vert *= mat4(
+		mat4 move_matr = mat4(
 					1, 0, 0, x_move,
 					0, 1, 0, y_move,
 					0, 0, 1, z_move,
 					0, 0, 0, 1);
 
+		vert *= move_matr;
+
 		float c = -1;
-		float last_z = vert.z;
-		vert *= mat4(
+
+		mat4 perspective_matr = mat4(
 					1, 0, 0, 0,
 					0, 1, 0, 0,
 					0, 0, 1, 0,
 					0, 0, -1/c, 1);
 
+		vert *= perspective_matr;
+
+		float last_z = vert.z;
 		gl_Position = vec4(vert.xy, last_z * vert[3]/1000, vert[3]);
 
 		Vert.texcoord = texcoord;
